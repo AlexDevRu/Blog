@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Posts{% endblock %}
+
+
+{% block content %}
+    {% if tag %}
+        <h2 class="mb-3"> Posts by tag "{{ tag }}" </h2>
+    {% endif %}
+    <div class="card-columns">
+        {% if tag %}
+            {% for post in tag.posts.all %}
+                {% include 'include/post_card.html' %}
+            {% endfor %}
+        {% else %}
+            {% for post in posts %}
+                {% include 'include/post_card.html' %}
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}
