@@ -8,12 +8,12 @@
     <div class="card-columns">
         {% for user in users %}
             {% with profile=user.profile %}
-                <div class="card" style="max-width: 18rem;">
+                <div class="card">
                   <img src="{% if profile.photo %}{{ profile.photo.url }}{% else %}{% static 'img/no-photo.png' %}{% endif %}"
                        class="card-img-top" alt="{{ user.username }}">
                   <div class="card-body text-center">
                     <h3 class="card-title">{{ user.username }}</h3>
-                    <a href="#" class="btn btn-primary w-100">GO</a>
+                    <a href="{{ profile.get_absolute_url }}" class="btn btn-primary w-100">GO</a>
                   </div>
                 </div>
             {% endwith %}

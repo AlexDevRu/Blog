@@ -5,7 +5,6 @@ app_name = 'blogs'
 
 urlpatterns = [
     path('', Posts.as_view(), name='posts'),
-    path('', include('django.contrib.auth.urls')),
     path('post/<slug:slug>/', Post.as_view(), name='post'),
     path('tags/', Tags.as_view(), name='tags'),
     path('tag/<slug:slug>/', Tag.as_view(), name='tag'),

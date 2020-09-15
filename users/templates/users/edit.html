@@ -1,22 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}Create an account{% endblock %}
+{% block title %}Edit your profile{% endblock %}
 
-{% load static %}
 
 {% block content %}
     <div class="card bg-light">
         <article class="card-body mx-auto" style="max-width: 400px;">
-            <h4 class="card-title mt-3 text-center">Create Account</h4>
-            <form action="." method="post" enctype="multipart/form-data">
+            <h4 class="card-title mt-3 text-center">Edit your profile</h4>
+            <form action="." method="post">
                 {% csrf_token %}
 
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
-                     </div>
-                    {{ user_form.username }}
-                </div>
                 <div class="form-group input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-user"></i> </span>
@@ -45,45 +38,24 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-camera"></i> </span>
                     </div>
-                    <div class="custom-file">
-                        {{ profile_form.photo }}
-                        <input type="file" class="custom-file-input" id="customFile">
-                        <label class="custom-file-label" for="customFile">Choose photo</label>
-                    </div>
+                    {{ profile_form.photo }}
                 </div>
                 <div class="form-group input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
                     </div>
-                    {{ user_form.password }}
+                    {{ user_form.old_password }}
                 </div>
                 <div class="form-group input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
                     </div>
-                    {{ user_form.password2 }}
+                    {{ user_form.new_password }}
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block" disabled>Create Account</button>
+                    <button type="submit" class="btn btn-primary btn-block">Save changes</button>
                 </div>
-                <p class="text-center">Have an account? <a href="">Log In</a></p>
             </form>
         </article>
     </div>
-{% endblock %}
-
-{% block domready %}
-    $('input').on(
-        'input',
-        function() {
-            array_required = Array.from($(`input[name="username"], input[name="first_name"],
-                                            input[name="password"], input[name="password2"]`))
-            if(array_required.every((elem) => elem.value)) {
-                $('.btn').attr("disabled", false);
-            }
-            else {
-                $('.btn').attr("disabled", true);
-            }
-        }
-    );
 {% endblock %}

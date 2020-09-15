@@ -9,9 +9,8 @@
     {# Load CSS and JavaScript #}
     {% bootstrap_css %}
     {% bootstrap_javascript jquery='full' %}
-    {# Display django.contrib.messages as Bootstrap alerts #}
-    {% bootstrap_messages %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
 </head>
 <body>
     <header>
@@ -28,40 +27,54 @@
                         <li class="nav-item {% if active == 'profile' %}active{% endif %}">
                             <a class="nav-link" href="{% url 'blogs:users:profile' %}">My profile</a>
                         </li>
-                        <li class="nav-item {% if active == 'posts' %}active{% endif %}">
-                            <a class="nav-link" href="{% url 'blogs:posts' %}">Posts</a>
-                        </li>
-                        <li class="nav-item {% if active == 'tags' %}active{% endif %}">
-                            <a class="nav-link" href="{% url 'blogs:tags' %}">Tags</a>
-                        </li>
-                        <li class="nav-item {% if active == 'users' %}active{% endif %}">
-                            <a class="nav-link" href="{% url 'blogs:users:users' %}">Users</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item {% if active == 'signup' %}active{% endif %}">
-                            <a class="nav-link" href="#">Sign Up</a>
-                        </li>
-                        <li class="nav-item {% if active == 'signin' %}active{% endif %}">
-                            <a class="nav-link" href="#">Sign In</a>
-                        </li>
                     {% endif %}
+                    <li class="nav-item {% if active == 'posts' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'blogs:posts' %}">Posts</a>
+                    </li>
+                    <li class="nav-item {% if active == 'tags' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'blogs:tags' %}">Tags</a>
+                    </li>
+                    <li class="nav-item {% if active == 'users' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'blogs:users:users' %}">Users</a>
+                    </li>
                 </ul>
                 {% if request.user.is_authenticated %}
-                  <form class="form-inline mt-2 mt-md-0 mr-3">
+                  <form class="form-inline mt-2 mt-md-0 mr-lg-5 mr-md-3">
                       <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
                       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                   </form>
                   <span class="text-white">
-                      Hello, {{ request.user.username }}
-                      <img class="rounded-circle" width="50" height="50"
-                           src="{{ request.user.profile.photo.url }}" alt="{{ request.user.username }}">
+                      Hello, {{ request.user.first_name }}
+                      {% with photo=request.user.profile.photo %}
+                          <img class="rounded-circle" width="50" height="50"
+                               src="{% if photo %}{{ photo.url }}{% else %}{% static 'img/no-photo.png' %}{% endif %}"
+                               alt="{{ request.user.username }}">
+                      {% endwith %}
+                      <a class="text-white ml-1" href="{% url 'blogs:users:logout' %}">Logout</a>
                   </span>
+                {% else %}
+                <ul class="navbar-nav">
+                    <li class="nav-item {% if active == 'signup' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'blogs:users:register' %}">Sign Up</a>
+                    </li>
+                    <li class="nav-item {% if active == 'signin' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'blogs:users:login' %}">Sign In</a>
+                    </li>
+                </ul>
                 {% endif %}
               </div>
         </nav>
     </header>
     <main role="main" class="container" style="padding-top: 100px;">
+        {# Display django.contrib.messages as Bootstrap alerts #}
+        {% bootstrap_messages %}
         {% block content %}{% endblock %}
     </main>
+
+    <script>
+        $(document).ready( function() {
+            {% block domready %}{% endblock %}
+        });
+    </script>
 </body>
 </html>

@@ -1,12 +1,27 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}{{ user.username }}{% endblock %}
 
 
 {% block content %}
     <div class="row">
-        <img src="{{ user.profile.photo.url }}" alt="{{ user.username }}" class="col-md-4">
-        <h3 class="text-center">{{ user.username }}</h3>
+        <img src="{% if user.profile.photo %}{{ user.profile.photo.url }}{% else %}{% static 'img/no-photo.png' %}{% endif %}" alt="{{ user.username }}" class="col-md-4 col-sm-3">
+        <div class="col-md-8 col-sm-9">
+            <h3>{{ user.get_full_name }}</h3>
+            <p>
+                <strong>Date of birth:</strong> {{ user.profile.date_of_birth|date:"SHORT_DATE_FORMAT"|default:"-" }} <br>
+                <strong>Email:</strong>
+                {% if user.email %}
+                    <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+                {% else %}
+                    -
+                {% endif %}
+            </p>
+            {% if user == request.user %}
+                <p><a href="{% url 'blogs:users:edit' %}">Edit profile</a></p>
+            {% endif %}
+        </div>
     </div>
 
     <h3 class="mt-4">Posts</h3>

@@ -17,10 +17,12 @@
         </small>
         <div>
             <a href="{{ post.user.profile.get_absolute_url }}">
-                <img class="rounded-circle"
-                     src="{{ post.user.profile.photo.url }}"
-                     alt="{{ post.user.username }}"
-                     width="40" height="40">
+                {% with photo=post.user.profile.photo %}
+                    <img class="rounded-circle"
+                         src="{% if photo %}{{ photo.url }}{% else %}{% static 'img/no-photo.png' %}{% endif %}"
+                         alt="{{ post.user.username }}"
+                         width="40" height="40">
+                {% endwith %}
             </a>
             <a href="{{ post.user.profile.get_absolute_url }}">{{ post.user.username }}</a>
         </div>

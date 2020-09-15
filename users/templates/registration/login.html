@@ -1,42 +1,62 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Log-in{% endblock %}
-
-{% block styles %}
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
-          integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP"
-          crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'account/css/social.css' %}">
-{% endblock %}
+{% block title %}Sign In{% endblock %}
 
 {% block content %}
-    <h1 class="title">Log-in</h1>
-    {% if form.errors %}
-        <p>Your username and password didn't match.Please try again.</p>
-    {% else %}
-        <p>Please, use the following form to log-in. If you don't have an account <a href="{% url 'register' %}">register here</a></p>
-    {% endif %}
+    <div class="card bg-light">
+        <article class="card-body mx-auto" style="max-width: 400px;">
+            <h4 class="card-title mt-3 text-center">Sign In</h4>
+            {% if form.errors %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    Your username and password didn't match. Please try again.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endif %}
+            <form action="." method="post">
+                {% csrf_token %}
 
-    <div class="login-form">
-        <form action="{% url 'login' %}" method="post">
-            {{ form.as_p }}
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ next }}" />
-            <input class="btn" type="submit" value="Log-in">
-        </form>
-
-        <p><a href="{% url 'password_reset' %}">Forgotten your password?</a></p>
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                     </div>
+                    <input type="text" name="username" autofocus="" autocapitalize="none"
+                           autocomplete="username" maxlength="150" required="" id="id_username"
+                            placeholder="{{ form.username.label }}" class="form-control">
+                </div>
+                <div class="form-group input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                    </div>
+                    <input type="password" name="password" autocomplete="current-password"
+                           required="" id="id_password" placeholder="{{ form.password.label }}"
+                            class="form-control">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block" disabled>Sign In</button>
+                </div>
+                <p class="text-center">
+                    Please, use the following form to log-in. If you don't have an account
+                    <a href="{% url 'blogs:users:register' %}">register here</a>
+                </p>
+            </form>
+        </article>
     </div>
+{% endblock %}
 
-    <div class="social">
-        <ul>
-            <li class="facebook_btn">
-                <a href="{% url 'social:begin' 'facebook' %}"><i class="fab fa-facebook"></i> Sign-in with Facebook</a>
-            </li>
-            <li class="twitter_btn">
-                <a href="{% url 'social:begin' 'twitter' %}"><i class="fab fa-twitter"></i> Login with Twitter</a>
-            </li>
-        </ul>
-    </div>
+{% block domready %}
+    $('input').on(
+        'input',
+        function() {
+            array = Array.from($('input'))
+            if(array.every((elem) => elem.value)) {
+                $('.btn').attr("disabled", false);
+            }
+            else {
+                $('.btn').attr("disabled", true);
+            }
+        }
+    );
 {% endblock %}
